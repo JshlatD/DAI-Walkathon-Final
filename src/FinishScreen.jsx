@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import confetti from "canvas-confetti"; 
+import confetti from "canvas-confetti"; // Added back for the celebration
 
 export default function Finish() {
   const runnerId = localStorage.getItem("userId");
@@ -27,9 +27,15 @@ export default function Finish() {
         });
         const data = await res.json();
         setStats(data);
-        
+
+        // ⭐ Trigger confetti when data is loaded successfully
         if (data.status === "YES") {
-          confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, zIndex: 9999 });
+          confetti({
+            particleCount: 150,
+            spread: 70,
+            origin: { y: 0.6 },
+            zIndex: 9999
+          });
         }
       } catch (err) {
         console.error("Fetch error:", err);
@@ -39,80 +45,52 @@ export default function Finish() {
     fetchStats();
   }, [runnerId]);
 
+  if (loading) return <div className="screen-container"><p>Calculating final results...</p></div>;
+
   return (
-    <div className="app-content">
-      {/* ⭐ HEADER BLOCK (Restored from Image 29) */}
-      <div className="header-blue" style={{ padding: '30px 20px 40px', textAlign: 'center', background: '#0d6efd', color: 'white', borderRadius: '0 0 30px 30px' }}>
-        <div className="logo-white-box" style={{ background: 'white', padding: '10px', borderRadius: '15px', display: 'inline-block', marginBottom: '15px' }}>
-          <img src="logo.png" alt="DAI Walkathon" style={{ height: '60px' }} />
-        </div>
-        <h2 style={{ margin: 0, fontSize: '24px', fontWeight: 'bold' }}>DAI Walkathon</h2>
+    <div className="screen-container" style={{ textAlign: 'center' }}>
+      <div style={{ fontSize: '60px', marginBottom: '10px' }}>🏆</div>
+      <h2 style={{ color: '#28a745' }}>Congratulations!</h2>
+      <p style={{ fontSize: '18px', margin: '10px 0' }}>
+        <strong>{userName}</strong>, you have successfully completed the DAI Walkathon!
+      </p>
+
+      <div className="finish-card" style={{ background: '#f8f9fa', padding: '20px', borderRadius: '20px', margin: '20px 0', border: '2px solid #28a745' }}>
+        <p style={{ textTransform: 'uppercase', fontSize: '12px', color: '#666', marginBottom: '5px' }}>Your Official Time</p>
+        
+        <h1 style={{ fontSize: '48px', margin: 0, color: '#333' }}>
+          {stats?.total ? formatTime(stats.total) : "00:00"}
+        </h1>
       </div>
 
-      <div className="screen-container" style={{ marginTop: '-20px', padding: '0 20px 30px' }}>
-        <div style={{ background: 'white', borderRadius: '30px', padding: '30px 20px', boxShadow: '0 10px 25px rgba(0,0,0,0.05)' }}>
-          
-          {loading ? (
-            <div style={{ padding: '40px 0', textAlign: 'center' }}>
-              <div className="spinner" style={{ margin: '0 auto' }}></div>
-              <p style={{ marginTop: '10px', color: '#666' }}>Finalizing results...</p>
-            </div>
-          ) : (
-            <>
-              <h2 style={{ fontSize: '26px', fontWeight: 'bold', marginBottom: '5px' }}>Congratulations!</h2>
-              <p style={{ color: '#333', fontSize: '18px', fontWeight: '600', marginBottom: '5px' }}>{userName}</p>
-              <p style={{ fontSize: '12px', color: '#888', marginBottom: '25px' }}>Bib Number: {runnerId}</p>
+      <p style={{ color: '#666', marginBottom: '25px' }}>
+        Age Group: <strong>{stats?.ageGroup}</strong>
+      </p>
 
-              {/* ⭐ STATS CARDS (Restored visual style from Image 29) */}
-              <div style={{ display: 'flex', gap: '15px', marginBottom: '30px' }}>
-                <div style={{ flex: 1, border: '1px solid #eee', borderRadius: '20px', padding: '15px', textAlign: 'center' }}>
-                  <small style={{ fontSize: '10px', color: '#999', textTransform: 'uppercase' }}>Total Time</small>
-                  {/* ⭐ Bound-Safe Time Display */}
-                  <h3 style={{ fontSize: '28px', margin: '5px 0', color: '#1a1a1a' }}>
-                    {stats?.total ? formatTime(stats.total) : "00:00"}
-                  </h3>
-                </div>
-                <div style={{ flex: 1, border: '1px solid #eee', borderRadius: '20px', padding: '15px', textAlign: 'center' }}>
-                  <small style={{ fontSize: '10px', color: '#999', textTransform: 'uppercase' }}>Race Status</small>
-                  <h3 style={{ fontSize: '18px', margin: '10px 0', color: '#28a745', fontWeight: 'bold' }}>FINISHED</h3>
-                </div>
-              </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+        <a 
+          href={`${API}?action=certificate&userId=${runnerId}`} 
+          className="primary-btn" 
+          style={{ textDecoration: 'none', background: '#28a745', display: 'block' }}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          🎓 Download Certificate
+        </a>
 
-              {/* ⭐ ACTION BUTTON (Only Download Certificate) */}
-              <a 
-                href={`${API}?action=certificate&userId=${runnerId}`} 
-                className="primary-btn" 
-                style={{ 
-                  textDecoration: 'none', 
-                  background: '#28a745', 
-                  color: 'white',
-                  display: 'flex', 
-                  justifyContent: 'center', 
-                  alignItems: 'center', 
-                  padding: '16px', 
-                  fontSize: '16px', 
-                  borderRadius: '12px',
-                  fontWeight: 'bold',
-                  marginBottom: '10px'
-                }}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                🎓 Download Certificate
-              </a>
-              <p style={{ fontSize: '10px', color: '#999' }}>PDF will open in a new tab for download.</p>
-
-              <button 
-                className="secondary-btn" 
-                style={{ marginTop: '20px', width: '100%', padding: '14px', borderRadius: '12px', border: '1px solid #ddd', background: 'transparent', color: '#666' }}
-                onClick={() => window.location.hash = "#performance"}
-              >
-                Detailed Performance
-              </button>
-            </>
-          )}
-        </div>
+        {/* ⭐ REMOVED "BACK TO SCANNER" BUTTON AS REQUESTED */}
+        
+        <button 
+          className="secondary-btn" 
+          onClick={() => window.location.hash = "#performance"}
+        >
+          Detailed Performance
+        </button>
       </div>
+
+      <p style={{ marginTop: '30px', fontSize: '11px', color: '#999' }}>
+        Thank you for participating! Your results are now live on the leaderboard.
+      </p>
     </div>
   );
 }
