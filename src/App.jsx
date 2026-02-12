@@ -4,11 +4,11 @@ import Scanner from "./Scanner";
 import Performance from "./Performance";
 import FinishScreen from "./FinishScreen";
 
-function App(){
-
-  const [registered, setRegistered] = useState(
-    !!localStorage.getItem("userId")
-  );
+function App() {
+  // This line checks the phone's memory every time the page refreshes
+  const [registered, setRegistered] = useState(() => {
+    return !!localStorage.getItem("userId");
+  });
 
   const [screen, setScreen] = useState("scanner");
 
