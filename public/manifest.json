@@ -1,0 +1,15 @@
+{
+  "short_name": "DAI Walkathon",
+  "name": "DAI Walkathon App",
+  "icons": [
+    {
+      "src": "logo512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "./index.html",
+  "display": "standalone",
+  "theme_color": "#007bff",
+  "background_color": "#ffffff"
+}
