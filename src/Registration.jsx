@@ -5,50 +5,62 @@ export default function Registration({ onRegistered }) {
   const [form, setForm] = useState({
     name: "",
     phone: "",
-    countryCode: "+91", 
+    countryCode: "+91",
+    email: "",
     gender: "",
-    dob: ""
+    dob: "",
+    otp: ""
   });
 
+  const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
 
-  // ⚠️ Ensure this matches your latest deployment
+  // ⚠️ Ensure this matches your latest Google Script URL
   const API = "https://script.google.com/macros/s/AKfycbxzpxbYQzVMSgnUheJ0N8y_KFmiMAeTBGxZBs3AFIghCQj82bN2W6E1TlBTEdcYuwE/exec";
    
   const validateForm = () => {
-    // 1. Name Check
-    if (!form.name.trim()) return "Please enter your name";
-
-    // 2. Phone Validation (Strictly 10 digits)
-    // The regex ^[0-9]{10}$ means "Start to end must be exactly 10 digits"
-    const phoneRegex = /^[0-9]{10}$/;
-    if (!phoneRegex.test(form.phone)) {
-      return "Phone number must be exactly 10 digits.";
-    }
-
-    // 3. DOB Validation (Year 1920 - 2020)
-    if (!form.dob) return "Please select Date of Birth";
-    const year = new Date(form.dob).getFullYear();
-    if (year < 1920 || year > 2020) {
-      return "Date of Birth year must be between 1920 and 2020.";
-    }
-
-    if (!form.gender) return "Please select Gender";
-
+    if (!form.name.trim()) return "Enter Name";
+    if (!/^[0-9]{10}$/.test(form.phone)) return "Phone must be 10 digits";
+    if (!form.dob) return "Enter Date of Birth";
+    if (!form.gender) return "Select Gender";
+    if (!form.email.includes("@")) return "Enter valid Email"; 
     return null;
   };
 
-  const handleSubmit = async () => {
-    
+  const handleSendOtp = async () => {
     const error = validateForm();
-    if (error) {
-      alert(error);
-      return;
-    }
+    if (error) { alert(error); return; }
 
     setLoading(true);
+    const fullPhone = `${form.countryCode}${form.phone}`;
 
-    // Combine Country Code + Phone
+    try {
+      const res = await fetch(API, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({
+          action: "sendOtp",
+          phone: fullPhone,
+          email: form.email,
+          name: form.name
+        })
+      });
+      const data = await res.json();
+      
+      if (data.status === "sent") {
+        alert("✅ OTP sent to your Email!");
+        setStep(2); 
+      } else {
+        alert("Error sending OTP");
+      }
+    } catch (e) { alert("Network Error"); }
+    setLoading(false);
+  };
+
+  const handleRegister = async () => {
+    if (!form.otp) { alert("Please enter OTP"); return; }
+    
+    setLoading(true);
     const fullPhone = `${form.countryCode}${form.phone}`;
 
     try {
@@ -60,94 +72,135 @@ export default function Registration({ onRegistered }) {
           name: form.name,
           phone: fullPhone,
           dob: form.dob,
-          gender: form.gender
+          gender: form.gender,
+          otp: form.otp 
         })
       });
 
       const data = await res.json();
 
       if (data.error) {
-        alert("❌ Registration Failed: " + data.error);
+        alert(data.error); 
       } else {
         localStorage.setItem("userId", data.userId);
-        alert(`✅ Registration Successful!\n\nWelcome, ${data.name}!`);
+        alert(`✅ Success! Welcome ${data.name}`);
         onRegistered();
       }
 
-    } catch (err) {
-      alert("Network Error. Please try again.");
-    }
-
+    } catch (err) { alert("Network Error"); }
     setLoading(false);
   };
 
   return (
     <div className="form-card">
-      <h3 className="form-title">Participant Registration</h3>
+      <h3 className="form-title">
+        {step === 1 ? "Participant Registration" : "Verify OTP"}
+      </h3>
 
-      <input
-        placeholder="Full Name"
-        className="input"
-        value={form.name}
-        onChange={(e) => setForm({ ...form, name: e.target.value })}
-      />
+      {step === 1 && (
+        <>
+          <input
+            placeholder="Full Name"
+            className="input"
+            value={form.name}
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
+          />
 
-      <div style={{ display: "flex", gap: "10px" }}>
-        <select
-          className="input"
-          style={{ width: "80px", padding: "10px" }}
-          value={form.countryCode}
-          onChange={(e) => setForm({ ...form, countryCode: e.target.value })}
-        >
-          <option value="+91">+91 (IN)</option>
-          <option value="+1">+1 (US)</option>
-          <option value="+44">+44 (UK)</option>
-        </select>
-        
-        <input
-          placeholder="Phone (10 digits)"
-          className="input"
-          type="tel"
-          maxLength={10} // ⭐ UI Restriction
-          value={form.phone}
-          onChange={(e) => {
-            const val = e.target.value.replace(/\D/g, ""); 
-            setForm({ ...form, phone: val });
-          }}
-        />
-      </div>
+          {/* ⭐ THIS SECTION IS FIXED WITH THE NEW CSS CLASS */}
+          <div className="phone-group">
+            <select
+              className="input"
+              value={form.countryCode}
+              onChange={(e) => setForm({ ...form, countryCode: e.target.value })}
+            >
+              <option value="+91">+91</option>
+              <option value="+1">+1</option>
+            </select>
+            
+            <input
+              placeholder="Phone (10 digits)"
+              className="input"
+              type="tel"
+              maxLength={10}
+              value={form.phone}
+              onChange={(e) => setForm({ ...form, phone: e.target.value.replace(/\D/g, "") })}
+            />
+          </div>
 
-      <div style={{textAlign:'left', marginBottom:'10px'}}>
-        <label style={{fontSize:'12px', color:'#666', marginLeft:'5px'}}>Date of Birth</label>
-        <input
-          type="date"
-          className="input"
-          min="1920-01-01"
-          max="2020-12-31"
-          value={form.dob}
-          onChange={(e) => setForm({ ...form, dob: e.target.value })}
-        />
-      </div>
+          <label style={{fontSize:'12px', color:'#666', marginLeft:'5px'}}>Date of Birth</label>
+          <input
+            type="date"
+            className="input"
+            // Adding styles to ensure text is visible on iOS
+            style={{lineHeight: '20px', minHeight:'50px'}}
+            min="1920-01-01"
+            max="2020-12-31"
+            value={form.dob}
+            onChange={(e) => setForm({ ...form, dob: e.target.value })}
+          />
 
-      <select
-        className="input"
-        value={form.gender}
-        onChange={(e) => setForm({ ...form, gender: e.target.value })}
-      >
-        <option value="">Select Gender</option>
-        <option>Male</option>
-        <option>Female</option>
-        <option>Other</option>
-      </select>
+          <input 
+            placeholder="Email (for OTP)"
+            className="input"
+            type="email"
+            value={form.email}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
+          />
 
-      <button 
-        className="btn" 
-        onClick={handleSubmit} 
-        disabled={loading}
-        style={{ opacity: loading ? 0.7 : 1 }}
-      >
-        {loading ? "Registering..." : "Register"}
-      </button>
+          <select
+            className="input"
+            value={form.gender}
+            onChange={(e) => setForm({ ...form, gender: e.target.value })}
+          >
+            <option value="">Select Gender</option>
+            <option>Male</option>
+            <option>Female</option>
+            <option>Other</option>
+          </select>
+
+          <button 
+            className="btn" 
+            onClick={handleSendOtp} 
+            disabled={loading}
+          >
+            {loading ? "Sending..." : "Register"}
+          </button>
+        </>
+      )}
+
+      {step === 2 && (
+        <>
+          <p style={{textAlign:"center", marginBottom:"15px"}}>
+            Enter the 6-digit code sent to {form.email}
+          </p>
+          
+          <input
+            placeholder="OTP"
+            className="input"
+            style={{textAlign:"center", letterSpacing:"5px", fontSize:"20px"}}
+            maxLength={6}
+            value={form.otp}
+            onChange={(e) => setForm({ ...form, otp: e.target.value })}
+          />
+
+          <button 
+            className="btn" 
+            onClick={handleRegister} 
+            disabled={loading}
+          >
+            {loading ? "Verifying..." : "Verify & Register"}
+          </button>
+          
+          <button 
+            className="secondary-btn" 
+            style={{marginTop:"10px", width:"100%"}}
+            onClick={() => setStep(1)}
+          >
+            Back
+          </button>
+        </>
+      )}
+
     </div>
   );
 }
