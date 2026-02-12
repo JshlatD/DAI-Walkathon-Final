@@ -3,8 +3,6 @@ import Registration from "./Registration";
 import Scanner from "./Scanner";
 import Performance from "./Performance";
 import FinishScreen from "./FinishScreen";
-// Ensure this path matches where you put the file!
-import MobileFrame from "./components/MobileFrame"; 
 
 function App(){
 
@@ -13,10 +11,10 @@ function App(){
     !!localStorage.getItem("userId")
   );
 
-  // Simple State-Based Navigation (No URLs)
+  // Simple State-Based Navigation
   const [screen, setScreen] = useState("scanner");
 
-  // ⭐ Listen for "navigation events" from other components
+  // ⭐ Listen for "navigation events"
   useEffect(() => {
     const handleNav = () => {
       const hash = window.location.hash;
@@ -34,8 +32,8 @@ function App(){
   }, []);
 
   return (
-    // If you don't have MobileFrame, just use <div className="app-bg">...</div>
     <div className="app-bg"> 
+      {/* This div acts as your mobile frame wrapper */}
       <div className="mobile-frame">
         
         {/* Header */}
