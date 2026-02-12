@@ -35,7 +35,7 @@ body {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  min-height: 80vh; /* Ensures it's tall enough */
+  min-height: 60vh; /* Ensures it's tall enough */
 }
 
 /* ⭐ HEADER (Restored the Tall Blue Style) */
@@ -50,8 +50,8 @@ body {
 
 /* ⭐ LOGO (Big & White Box) */
 .app-logo {
-  width: 200px;  /* ⭐ BIGGER LOGO */
-  height: 200px;
+  width: 180px;  /* ⭐ BIGGER LOGO */
+  height: 180px;
   object-fit: contain;
   background: white; /* White box behind logo */
   padding: 10px;
