@@ -6,15 +6,12 @@ import FinishScreen from "./FinishScreen";
 
 function App(){
 
-  // Check if user is already logged in
   const [registered, setRegistered] = useState(
     !!localStorage.getItem("userId")
   );
 
-  // Simple State-Based Navigation
   const [screen, setScreen] = useState("scanner");
 
-  // ⭐ Listen for "navigation events"
   useEffect(() => {
     const handleNav = () => {
       const hash = window.location.hash;
@@ -22,22 +19,19 @@ function App(){
       else if (hash === "#finish") setScreen("finish");
       else setScreen("scanner");
     };
-
-    // Check on load
     handleNav();
-
-    // Listen for changes
     window.addEventListener("hashchange", handleNav);
     return () => window.removeEventListener("hashchange", handleNav);
   }, []);
 
   return (
     <div className="app-bg"> 
-      {/* This div acts as your mobile frame wrapper */}
       <div className="mobile-frame">
         
-        {/* Header */}
+        {/* ⭐ HEADER WITH BIG LOGO */}
         <div className="app-header">
+           {/* Ensure logo.png is in your /public folder! */}
+           <img src="/logo.png" alt="DAI Logo" className="app-logo" />
            <h2>DAI Walkathon</h2>
         </div>
 

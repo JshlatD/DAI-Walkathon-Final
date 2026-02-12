@@ -2,122 +2,166 @@
 
 /* ⭐ GLOBAL RESET */
 * {
-  box-sizing: border-box; /* Prevents padding from breaking width */
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
   font-family: "Poppins", sans-serif;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
-  background-color: #f0f2f5;
+  background-color: #e9ecef; /* Light Grey Background */
+  min-height: 100vh;
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* Aligns to top on mobile */
-  min-height: 100vh;
+  align-items: center;
 }
 
-/* ⭐ APP CONTAINER (Phone Frame) */
+/* ⭐ APP WRAPPER (The Phone Frame) */
+.app-bg {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 20px 0; /* Adds spacing on top/bottom on desktop */
+}
+
+/* ⭐ MOBILE FRAME (The Phone Itself) */
 .mobile-frame {
   width: 100%;
-  max-width: 450px; /* Limits width on Desktop */
-  min-height: 100vh;   /* Fills height on Mobile */
+  max-width: 400px; /* Perfect phone width */
   background: white;
-  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+  border-radius: 30px; /* Rounded corners like your screenshot */
+  box-shadow: 0 10px 40px rgba(0,0,0,0.15); /* Nice shadow */
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  position: relative;
+  min-height: 80vh; /* Ensures it's tall enough */
 }
 
-/* ⭐ HEADER */
+/* ⭐ HEADER (Restored the Tall Blue Style) */
 .app-header {
-  background: linear-gradient(45deg,#0d6efd,#3a8bff);
+  background-color: #0d6efd; /* Solid Blue */
   color: white;
-  padding: 15px;
+  padding: 30px 20px; /* Taller padding */
   text-align: center;
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
+/* ⭐ LOGO (Big & White Box) */
+.app-logo {
+  width: 200px;  /* ⭐ BIGGER LOGO */
+  height: 200px;
+  object-fit: contain;
+  background: white; /* White box behind logo */
+  padding: 10px;
+  border-radius: 15px; /* Rounded box */
+  margin: 0 auto 15px; /* Center it */
+  display: block;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.app-header h2 {
+  font-size: 24px; /* Bigger Title */
+  font-weight: 700;
+  margin: 0;
+}
+
+/* ⭐ CONTENT AREA */
 .app-content {
-  padding: 20px;
-  flex: 1; /* Pushes content to fill space */
-  display: flex;
-  flex-direction: column;
-  /* align-items: center;  <-- Removed this to allow full-width inputs */
+  padding: 25px;
+  background: white; /* Clean white background */
+  flex: 1;
 }
 
-/* ⭐ INPUTS & BUTTONS (Full Width) */
-.input, select, button {
+/* ⭐ FORM CARD (The inner container) */
+.form-card {
+  background: #f8f9fa; /* Very light grey for the form area */
+  padding: 20px;
+  border-radius: 20px;
+  border: 1px solid #f0f0f0;
+}
+
+.form-title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* ⭐ INPUTS */
+.input, select {
   width: 100%;
   padding: 14px;
-  margin-bottom: 12px;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-  font-size: 16px; /* Prevents auto-zoom on iPhone */
+  margin-bottom: 15px;
+  border: 1px solid #dee2e6;
+  border-radius: 10px;
+  font-size: 16px;
+  background: white;
+  color: #333;
 }
 
 .input:focus {
   outline: none;
   border-color: #0d6efd;
-  box-shadow: 0 0 5px rgba(13,110,253,0.3);
+  box-shadow: 0 0 0 4px rgba(13,110,253,0.1);
 }
 
+/* ⭐ BUTTONS */
 button {
-  cursor: pointer;
-  font-weight: bold;
+  width: 100%;
+  padding: 15px;
   border: none;
-  transition: transform 0.1s;
+  border-radius: 10px; /* Rounded like screenshot */
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+  margin-top: 10px;
 }
 
-button:active {
-  transform: scale(0.98);
-}
-
-.primary-btn {
-  background: linear-gradient(45deg,#0d6efd,#3a8bff);
+.primary-btn, .btn {
+  background-color: #0d6efd; /* Bright Blue */
   color: white;
 }
 
-.secondary-btn {
-  background-color: white;
-  border: 1px solid #ccc;
-  color: #333;
-  margin-top: 5px;
+.primary-btn:active, .btn:active {
+  transform: scale(0.98);
 }
 
-/* ⭐ SCANNER BOX (Responsive) */
+.secondary-btn {
+  background: white;
+  border: 1px solid #ccc;
+  color: #555;
+}
+
+/* ⭐ SCANNER BOX */
 .scanner-box {
   width: 100%;
-  max-width: 300px; /* Limits camera size */
-  aspect-ratio: 1/1; /* Keeps it square */
+  aspect-ratio: 1/1;
   background: black;
-  border-radius: 12px;
+  border-radius: 15px;
   overflow: hidden;
-  margin: 20px auto;
-  position: relative;
+  margin: 20px 0;
 }
 
-/* Fix for HTML5-QRCode library adding extra borders */
-#reader-box video {
-  object-fit: cover;
-  border-radius: 12px;
-}
-
-/* ⭐ STATUS TEXT */
-.status-text {
-  margin: 15px 0;
-  font-weight: bold;
-  font-size: 18px;
-  color: #333;
-  text-align: center;
-}
-
-/* Form Card (Optional wrapper if used) */
-.form-card {
-  background: #f8f9fa;
-  padding: 20px;
-  border-radius: 20px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  width: 100%;
+/* MEDIA QUERY: Full screen on Mobile */
+@media (max-width: 480px) {
+  body {
+    background: white; /* No grey bars on phone */
+  }
+  .app-bg {
+    padding: 0;
+    height: 100vh;
+  }
+  .mobile-frame {
+    max-width: 100%;
+    height: 100%;
+    border-radius: 0; /* Square corners on phone */
+    box-shadow: none;
+  }
+  .app-header {
+    padding-top: 40px; /* Safe area for status bar */
+  }
 }
