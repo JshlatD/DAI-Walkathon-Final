@@ -115,26 +115,30 @@ input[type="date"] {
   box-shadow: 0 0 0 4px rgba(13,110,253,0.1);
 }
 
-/* ⭐ PHONE GROUP (New Class for Fixing Overflow) */
+/* ⭐ STRICT PHONE GROUP FIX */
 .phone-group {
   display: flex;
+  flex-direction: row; /* Force side-by-side */
   gap: 10px;
+  width: 100%; /* Ensure container doesn't overflow */
   margin-bottom: 15px;
 }
 
-/* The Country Code Dropdown */
-.phone-group select {
-  width: 85px !important; /* Fixed width */
+/* Country Code */
+.phone-group .phone-code {
+  width: 80px !important; /* Fixed small width */
+  min-width: 80px;
   margin-bottom: 0;
-  flex-shrink: 0; /* Prevent squishing */
 }
 
-/* The Phone Input */
-.phone-group input {
-  width: auto !important; /* Override 100% width */
-  flex: 1; /* Take remaining space */
+/* Phone Number Input */
+.phone-group .phone-number {
+  flex: 1; /* Takes remaining space */
+  width: 100% !important; /* Force it to fit flex container */
+  min-width: 0; /* Critical for Flexbox overflow prevention */
   margin-bottom: 0;
 }
+
 
 /* ⭐ BUTTONS */
 button {
