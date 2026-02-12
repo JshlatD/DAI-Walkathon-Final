@@ -9,7 +9,8 @@ export default function Scanner() {
   const [status, setStatus] = useState("Ready to scan");
   const [scanning, setScanning] = useState(false);
   const [cameraReady, setCameraReady] = useState(false);
-  
+  const [processing, setProcessing] = useState(false); // ⭐ Guard for button clicking
+
   const [batchData, setBatchData] = useState(() => {
     return JSON.parse(localStorage.getItem("batchData") || "[]");
   });
@@ -34,22 +35,24 @@ export default function Scanner() {
   const API = "https://script.google.com/macros/s/AKfycbxzpxbYQzVMSgnUheJ0N8y_KFmiMAeTBGxZBs3AFIghCQj82bN2W6E1TlBTEdcYuwE/exec";
 
   const onScanSuccess = async (decodedText) => {
-    // 1. Immediate Stop to prevent double-scans
+    // ⭐ LOCK UI: Prevent any overlapping scans or clicks
+    setProcessing(true);
     await stopScanner();
     
     const scanTime = new Date().getTime();
     const sequence = ["CP1", "CP2", "CP3", "CP4", "CP5"];
     
-    // ⭐ 2. Get the freshest 'lastCP' directly from storage to avoid React state delay
+    // Get freshest lastCP directly from storage
     const currentStoredCP = localStorage.getItem("lastCP") || "";
     const expected = !currentStoredCP ? "CP1" : (currentStoredCP === "CP5" ? "CP1" : sequence[sequence.indexOf(currentStoredCP) + 1]);
     
     if (decodedText !== expected) {
       setStatus(`❌ Wrong Checkpoint! Go to ${expected}`);
+      setProcessing(false);
       return;
     }
 
-    // ⭐ 3. Update Storage IMMEDIATELY
+    // ⭐ Update Storage IMMEDIATELY for sequence validation
     localStorage.setItem("lastCP", decodedText);
     setLastCP(decodedText);
 
@@ -78,6 +81,8 @@ export default function Scanner() {
           }
           if (data.finished) window.location.hash = "#finish";
           setStatus("CP1 Verified ✅");
+        } else {
+           setStatus(`❌ ${data.error}`);
         }
       } catch (e) {
         setStatus("⚠️ Offline. Saved CP1 locally.");
@@ -89,10 +94,13 @@ export default function Scanner() {
       localStorage.setItem("batchData", JSON.stringify(newBatch));
       setStatus(`${decodedText} Saved Locally ✅`);
     }
+    
+    // ⭐ UNLOCK UI: Processing complete
+    setProcessing(false);
   };
 
   const startScanner = async () => {
-    if (scanning) return;
+    if (scanning || processing) return; // Prevent start if already working
     setCameraReady(false); 
     const scanner = new Html5Qrcode("reader-box");
     scannerRef.current = scanner;
@@ -135,9 +143,25 @@ export default function Scanner() {
       </div>
       <p className="status-text">{status}</p>
       <div className="scanner-buttons">
-        {!scanning && <button className="primary-btn" onClick={startScanner}>Start Scan</button>}
-        {scanning && <button className="primary-btn" style={{background: "#dc3545"}} onClick={stopScanner}>Close Camera</button>}
-        <button className="secondary-btn" onClick={() => window.location.hash = "#performance"}>View Performance</button>
+        {!scanning && (
+          <button 
+            className="primary-btn" 
+            onClick={startScanner}
+            disabled={processing} // Disable button visually while processing
+          >
+            {processing ? "Saving..." : "Start Scan"}
+          </button>
+        )}
+        
+        {scanning && (
+          <button className="primary-btn" style={{background: "#dc3545"}} onClick={stopScanner}>
+            Close Camera
+          </button>
+        )}
+        
+        <button className="secondary-btn" onClick={() => window.location.hash = "#performance"}>
+          View Performance
+        </button>
       </div>
     </div>
   );
