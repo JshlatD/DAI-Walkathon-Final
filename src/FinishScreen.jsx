@@ -7,7 +7,7 @@ export default function Finish() {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const API = "https://script.google.com/macros/s/AKfycbxzpxbYQzVMSgnUheJ0Y8y_KFmiMAeTBGxZBs3AFIghCQj82bN2W6E1TlBTEdcYuwE/exec";
+  const API = "https://script.google.com/macros/s/AKfycbxzpxbYQzVMSgnUheJ0N8y_KFmiMAeTBGxZBs3AFIghCQj82bN2W6E1TlBTEdcYuwE/exec";
 
   const formatTime = (decimalMins) => {
     if (!decimalMins || isNaN(decimalMins)) return "00:00";
@@ -29,12 +29,7 @@ export default function Finish() {
         setStats(data);
         
         if (data.status === "YES") {
-          confetti({
-            particleCount: 150,
-            spread: 70,
-            origin: { y: 0.6 },
-            zIndex: 9999 
-          });
+          confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, zIndex: 9999 });
         }
       } catch (err) {
         console.error("Fetch error:", err);
@@ -45,88 +40,78 @@ export default function Finish() {
   }, [runnerId]);
 
   return (
-    <div className="app-content" style={{ overflowY: 'auto' }}> {/* ⭐ Allows scrolling if content exceeds height */}
-      <div className="header-blue">
-        <div className="logo-white-box">
-          <img src="logo.png" alt="DAI Walkathon" className="logo-img" />
+    <div className="app-content">
+      {/* ⭐ HEADER BLOCK (Restored from Image 29) */}
+      <div className="header-blue" style={{ padding: '30px 20px 40px', textAlign: 'center', background: '#0d6efd', color: 'white', borderRadius: '0 0 30px 30px' }}>
+        <div className="logo-white-box" style={{ background: 'white', padding: '10px', borderRadius: '15px', display: 'inline-block', marginBottom: '15px' }}>
+          <img src="logo.png" alt="DAI Walkathon" style={{ height: '60px' }} />
         </div>
-        <h2 className="header-title">DAI Walkathon</h2>
+        <h2 style={{ margin: 0, fontSize: '24px', fontWeight: 'bold' }}>DAI Walkathon</h2>
       </div>
 
-      <div className="screen-container" style={{ textAlign: 'center', width: '100%', padding: '15px' }}>
-        {loading ? (
-          <div style={{ padding: '50px 0' }}>
-            <div className="spinner" style={{ margin: '0 auto' }}></div>
-            <p>Fetching your final results...</p>
-          </div>
-        ) : (
-          <>
-            <div style={{ fontSize: '50px', marginBottom: '5px' }}>🏆</div>
-            <h2 style={{ color: '#28a745', fontSize: '22px', margin: '5px 0' }}>Great Job, {userName}!</h2>
-            <p style={{ fontSize: '15px', margin: '5px 0', color: '#555' }}>
-              You have successfully completed the DAI Walkathon!
-            </p>
-
-            {/* ⭐ FIXED: Adjusted padding and font-size to keep time within bounds */}
-            <div className="finish-card" style={{ 
-              background: '#f1f8f1', 
-              padding: '15px 10px', 
-              borderRadius: '20px', 
-              margin: '20px 0', 
-              border: '2px solid #28a745', 
-              width: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              <p style={{ textTransform: 'uppercase', fontSize: '11px', color: '#666', marginBottom: '0' }}>Official Time</p>
-              <h1 style={{ 
-                fontSize: '52px', // Slightly smaller to ensure it fits mobile widths
-                margin: '5px 0', 
-                color: '#1a1a1a', 
-                fontWeight: 'bold',
-                lineHeight: '1'
-              }}>
-                {stats?.total ? formatTime(stats.total) : "00:00"}
-              </h1>
-              <p style={{ color: '#666', fontSize: '13px', margin: '0' }}>Age Group: <strong>{stats?.ageGroup}</strong></p>
+      <div className="screen-container" style={{ marginTop: '-20px', padding: '0 20px 30px' }}>
+        <div style={{ background: 'white', borderRadius: '30px', padding: '30px 20px', boxShadow: '0 10px 25px rgba(0,0,0,0.05)' }}>
+          
+          {loading ? (
+            <div style={{ padding: '40px 0', textAlign: 'center' }}>
+              <div className="spinner" style={{ margin: '0 auto' }}></div>
+              <p style={{ marginTop: '10px', color: '#666' }}>Finalizing results...</p>
             </div>
+          ) : (
+            <>
+              <h2 style={{ fontSize: '26px', fontWeight: 'bold', marginBottom: '5px' }}>Congratulations!</h2>
+              <p style={{ color: '#333', fontSize: '18px', fontWeight: '600', marginBottom: '5px' }}>{userName}</p>
+              <p style={{ fontSize: '12px', color: '#888', marginBottom: '25px' }}>Bib Number: {runnerId}</p>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '100%' }}>
+              {/* ⭐ STATS CARDS (Restored visual style from Image 29) */}
+              <div style={{ display: 'flex', gap: '15px', marginBottom: '30px' }}>
+                <div style={{ flex: 1, border: '1px solid #eee', borderRadius: '20px', padding: '15px', textAlign: 'center' }}>
+                  <small style={{ fontSize: '10px', color: '#999', textTransform: 'uppercase' }}>Total Time</small>
+                  {/* ⭐ Bound-Safe Time Display */}
+                  <h3 style={{ fontSize: '28px', margin: '5px 0', color: '#1a1a1a' }}>
+                    {stats?.total ? formatTime(stats.total) : "00:00"}
+                  </h3>
+                </div>
+                <div style={{ flex: 1, border: '1px solid #eee', borderRadius: '20px', padding: '15px', textAlign: 'center' }}>
+                  <small style={{ fontSize: '10px', color: '#999', textTransform: 'uppercase' }}>Race Status</small>
+                  <h3 style={{ fontSize: '18px', margin: '10px 0', color: '#28a745', fontWeight: 'bold' }}>FINISHED</h3>
+                </div>
+              </div>
+
+              {/* ⭐ ACTION BUTTON (Only Download Certificate) */}
               <a 
                 href={`${API}?action=certificate&userId=${runnerId}`} 
                 className="primary-btn" 
                 style={{ 
                   textDecoration: 'none', 
                   background: '#28a745', 
+                  color: 'white',
                   display: 'flex', 
                   justifyContent: 'center', 
                   alignItems: 'center', 
                   padding: '16px', 
-                  fontSize: '17px', 
-                  borderRadius: '12px' 
+                  fontSize: '16px', 
+                  borderRadius: '12px',
+                  fontWeight: 'bold',
+                  marginBottom: '10px'
                 }}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 🎓 Download Certificate
               </a>
+              <p style={{ fontSize: '10px', color: '#999' }}>PDF will open in a new tab for download.</p>
 
               <button 
                 className="secondary-btn" 
-                style={{ padding: '14px', fontSize: '15px' }}
+                style={{ marginTop: '20px', width: '100%', padding: '14px', borderRadius: '12px', border: '1px solid #ddd', background: 'transparent', color: '#666' }}
                 onClick={() => window.location.hash = "#performance"}
               >
                 Detailed Performance
               </button>
-            </div>
-
-            <p style={{ marginTop: '30px', fontSize: '11px', color: '#999' }}>
-              Your rank is now updated on the live leaderboard!
-            </p>
-          </>
-        )}
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
