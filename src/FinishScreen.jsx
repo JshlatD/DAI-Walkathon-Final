@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import confetti from "canvas-confetti"; // Added back for the celebration
 
 export default function Finish() {
   const runnerId = localStorage.getItem("userId");
@@ -9,6 +8,7 @@ export default function Finish() {
 
   const API = "https://script.google.com/macros/s/AKfycbxzpxbYQzVMSgnUheJ0N8y_KFmiMAeTBGxZBs3AFIghCQj82bN2W6E1TlBTEdcYuwE/exec";
 
+  // ⭐ HELPER: Converts decimal minutes to MM:SS
   const formatTime = (decimalMins) => {
     if (!decimalMins || isNaN(decimalMins)) return "00:00";
     const totalSeconds = Math.round(decimalMins * 60);
@@ -27,16 +27,6 @@ export default function Finish() {
         });
         const data = await res.json();
         setStats(data);
-
-        // ⭐ Trigger confetti when data is loaded successfully
-        if (data.status === "YES") {
-          confetti({
-            particleCount: 150,
-            spread: 70,
-            origin: { y: 0.6 },
-            zIndex: 9999
-          });
-        }
       } catch (err) {
         console.error("Fetch error:", err);
       }
@@ -58,6 +48,7 @@ export default function Finish() {
       <div className="finish-card" style={{ background: '#f8f9fa', padding: '20px', borderRadius: '20px', margin: '20px 0', border: '2px solid #28a745' }}>
         <p style={{ textTransform: 'uppercase', fontSize: '12px', color: '#666', marginBottom: '5px' }}>Your Official Time</p>
         
+        {/* ⭐ FIXED: Now displays MM:SS instead of seconds */}
         <h1 style={{ fontSize: '48px', margin: 0, color: '#333' }}>
           {stats?.total ? formatTime(stats.total) : "00:00"}
         </h1>
@@ -78,8 +69,6 @@ export default function Finish() {
           🎓 Download Certificate
         </a>
 
-        {/* ⭐ REMOVED "BACK TO SCANNER" BUTTON AS REQUESTED */}
-        
         <button 
           className="secondary-btn" 
           onClick={() => window.location.hash = "#performance"}
