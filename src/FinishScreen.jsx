@@ -75,8 +75,10 @@ export default function Finish() {
         flexDirection: 'column', 
         alignItems: 'stretch', // ⭐ Forces children to fill width
         textAlign: 'center',
-        overflowY: 'auto',     // ⭐ Re-enabled scrolling for small screens
-        maxHeight: '85vh',     // ⭐ Prevents content from going off-bottom
+        minHeight: '100vh',
+        overflowY: 'visible',
+        //overflowY: 'auto',     // ⭐ Re-enabled scrolling for small screens
+        //maxHeight: '85vh',     // ⭐ Prevents content from going off-bottom
         padding: '10px 20px 40px'
       }}>
         <div style={{ fontSize: '50px', marginBottom: '5px' }}>🏆</div>
