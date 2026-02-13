@@ -45,7 +45,7 @@ export default function Performance() {
   return (
     <div className="app-content" style={{ width: '100%', boxSizing: 'border-box' }}>
       <div className="screen-container" style={{ 
-        width: '100%', 
+        width: '50vh%', 
         boxSizing: 'border-box', 
         display: 'flex', 
         flexDirection: 'column', 
