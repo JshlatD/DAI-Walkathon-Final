@@ -8,7 +8,7 @@ export default function Finish() {
   const [runnerId, setRunnerId] = useState(localStorage.getItem("userId"));
   const [userName, setUserName] = useState(localStorage.getItem("userName"));
 
-  const API = "https://script.google.com/macros/s/AKfycbxzpxbYQzVMSgnUheJ0N8y_KFmiMAeTBGxZBs3AFIghCQj82bN2W6E1TlBTEdcYuwE/exec";
+  const API = "https://script.google.com/macros/s/AKfycbxzpxbYQzVMSgnUheJ0Y8y_KFmiMAeTBGxZBs3AFIghCQj82bN2W6E1TlBTEdcYuwE/exec";
 
   const formatTime = (decimalMins) => {
     if (!decimalMins || isNaN(decimalMins)) return "00:00";
@@ -21,11 +21,7 @@ export default function Finish() {
   useEffect(() => {
     const fetchStats = async () => {
       const currentId = runnerId || localStorage.getItem("userId");
-      
-      if (!currentId) {
-        setLoading(false);
-        return;
-      }
+      if (!currentId) { setLoading(false); return; }
 
       try {
         const res = await fetch(API, {
@@ -33,27 +29,17 @@ export default function Finish() {
           headers: { "Content-Type": "text/plain;charset=utf-8" },
           body: JSON.stringify({ action: "getUserStats", userId: currentId })
         });
-        
         const data = await res.json();
-        
         if (!data.error) {
           setStats(data);
           if (data.status === "YES") {
             localStorage.setItem("raceStatus", "YES");
-            confetti({
-              particleCount: 150,
-              spread: 70,
-              origin: { y: 0.6 },
-              zIndex: 9999
-            });
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, zIndex: 9999 });
           }
         }
-      } catch (err) {
-        console.error("Network Error:", err);
-      }
+      } catch (err) { console.error("Network Error:", err); }
       setLoading(false);
     };
-
     fetchStats();
   }, [runnerId]);
 
@@ -67,50 +53,50 @@ export default function Finish() {
   );
 
   return (
+    /* ⭐ One single wrapper with box-sizing to prevent overflow */
     <div className="app-content" style={{ width: '100%', boxSizing: 'border-box' }}>
       <div className="screen-container" style={{ 
-        width: '100%', 
+        width: '50vh', 
         boxSizing: 'border-box', 
         display: 'flex', 
         flexDirection: 'column', 
-        alignItems: 'stretch', // ⭐ Forces children to fill width
+        //alignItems: 'stretch', // Forces internal elements to fill width nicely
         textAlign: 'center',
-        minHeight: '50dvh',
-        overflowY: 'auto',
-        //overflowY: 'auto',     // ⭐ Re-enabled scrolling for small screens
-        //maxHeight: '85vh',     // ⭐ Prevents content from going off-bottom
-        padding: '10px 20px 40px'
+        overflowY: 'auto',     
+        minHeight: '65vh',     
+        padding: '10px 10px 30px' // Slightly reduced horizontal padding
       }}>
-        <div style={{ fontSize: '50px', marginBottom: '5px' }}>🏆</div>
-        <h2 style={{ color: '#28a745', margin: '0 0 5px' }}>Congratulations!</h2>
-        <p style={{ fontSize: '15px', margin: '0 0 15px', color: '#555' }}>
+        <div style={{ fontSize: '40px', marginBottom: '5px' }}>🏆</div>
+        <h2 style={{ color: '#28a745', margin: '0 0 5px', fontSize: '22px' }}>Congratulations!</h2>
+        <p style={{ fontSize: '14px', margin: '0 0 15px', color: '#555' }}>
           <strong>{userName || localStorage.getItem("userName")}</strong>, you finished!
         </p>
 
+        {/* ⭐ Standardized card width for mobile */}
         <div className="finish-card" style={{ 
           background: '#f8f9fa', 
-          padding: '20px', 
+          padding: '15px', 
           borderRadius: '20px', 
           margin: '0 0 20px', 
           border: '2px solid #28a745',
           width: '100%',
           boxSizing: 'border-box'
         }}>
-          <p style={{ textTransform: 'uppercase', fontSize: '11px', color: '#666', marginBottom: '5px' }}>Your Official Time</p>
-          <h1 style={{ fontSize: '48px', margin: 0, color: '#333', fontWeight: 'bold' }}>
+          <p style={{ textTransform: 'uppercase', fontSize: '10px', color: '#666', marginBottom: '5px' }}>Your Official Time</p>
+          <h1 style={{ fontSize: '42px', margin: 0, color: '#333', fontWeight: 'bold' }}>
             {stats?.total ? formatTime(stats.total) : "00:00"}
           </h1>
         </div>
 
-        <p style={{ color: '#666', marginBottom: '20px', fontSize: '14px' }}>
+        <p style={{ color: '#666', marginBottom: '20px', fontSize: '13px' }}>
           Age Group: <strong>{stats?.ageGroup || "Fetching..."}</strong>
         </p>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '100%', boxSizing: 'border-box' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%', boxSizing: 'border-box' }}>
           <a 
             href={`${API}?action=certificate&userId=${runnerId || localStorage.getItem("userId")}`} 
             className="primary-btn" 
-            style={{ textDecoration: 'none', background: '#28a745', display: 'block', padding: '15px', textAlign: 'center', width: '100%', boxSizing: 'border-box' }}
+            style={{ textDecoration: 'none', background: '#28a745', display: 'block', padding: '14px', textAlign: 'center', width: '100%', boxSizing: 'border-box', fontSize: '15px' }}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -119,14 +105,14 @@ export default function Finish() {
 
           <button 
             className="secondary-btn" 
-            style={{ padding: '14px', width: '100%', boxSizing: 'border-box' }}
+            style={{ padding: '14px', width: '100%', boxSizing: 'border-box', fontSize: '14px' }}
             onClick={() => window.location.hash = "#performance"}
           >
             Detailed Performance
           </button>
         </div>
 
-        <p style={{ marginTop: '25px', fontSize: '11px', color: '#999' }}>
+        <p style={{ marginTop: '20px', fontSize: '11px', color: '#999' }}>
           Thank you for participating!
         </p>
       </div>
