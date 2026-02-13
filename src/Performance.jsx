@@ -7,7 +7,6 @@ export default function Performance() {
   const [loading, setLoading] = useState(true);
 
   const API = "https://script.google.com/macros/s/AKfycbxzpxbYQzVMSgnUheJ0N8y_KFmiMAeTBGxZBs3AFIghCQj82bN2W6E1TlBTEdcYuwE/exec";
-
   const formatTime = (decimalMins) => {
     if (!decimalMins || isNaN(decimalMins) || decimalMins === 0) return "00:00";
     const totalSeconds = Math.round(decimalMins * 60);
@@ -36,7 +35,7 @@ export default function Performance() {
 
   if (loading) return (
     <div className="app-content">
-      <div className="screen-container">
+      <div className="screen-container" style={{ width: '100%', boxSizing: 'border-box' }}>
         <div className="spinner" style={{margin: '50px auto'}}></div>
         <p style={{textAlign: 'center'}}>Fetching your stats...</p>
       </div>
@@ -44,15 +43,22 @@ export default function Performance() {
   );
 
   return (
-    <div className="app-content"> {/* ⭐ Added wrapper for width */}
-      <div className="screen-container" style={{ width: '100%' }}>
+    <div className="app-content" style={{ width: '100%', boxSizing: 'border-box' }}>
+      <div className="screen-container" style={{ 
+        width: '100%', 
+        boxSizing: 'border-box', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        alignItems: 'stretch' // ⭐ Forces children to fill width
+      }}>
         <h2 style={{textAlign: 'center', marginBottom: '10px'}}>My Performance</h2>
         <div style={{textAlign: 'center', marginBottom: '20px'}}>
           <p><strong>{userName}</strong></p>
           <p style={{fontSize: '12px', color: '#666'}}>Bib Number: {runnerId}</p>
         </div>
         
-        <div className="stats-grid" style={{display: 'flex', gap: '10px', marginBottom: '25px', width: '100%'}}>
+        {/* ⭐ Standardized grid for mobile widths */}
+        <div className="stats-grid" style={{display: 'flex', gap: '10px', marginBottom: '25px', width: '100%', boxSizing: 'border-box'}}>
           <div className="stat-card" style={{flex: 1, background: '#f8f9fa', padding: '15px', borderRadius: '15px', textAlign: 'center', border: '1px solid #dee2e6'}}>
             <small style={{color: '#666', fontSize: '11px', textTransform: 'uppercase'}}>Total Time</small>
             <h3 style={{margin: '5px 0', fontSize: '24px'}}>{formatTime(stats?.total)}</h3>
@@ -66,7 +72,7 @@ export default function Performance() {
         </div>
 
         <h4 style={{marginBottom: '10px', alignSelf: 'flex-start'}}>Lap Breakdown</h4>
-        <div className="lap-list" style={{background: '#fff', borderRadius: '15px', overflow: 'hidden', border: '1px solid #eee', width: '100%'}}>
+        <div className="lap-list" style={{background: '#fff', borderRadius: '15px', overflow: 'hidden', border: '1px solid #eee', width: '100%', boxSizing: 'border-box'}}>
           {stats?.rounds && stats.rounds.length > 0 ? (
             stats.rounds.map((time, index) => (
               <div key={index} className="lap-item" style={{display: 'flex', justifyContent: 'space-between', padding: '12px 15px', borderBottom: '1px solid #eee'}}>
@@ -84,7 +90,7 @@ export default function Performance() {
             <a 
               href={`${API}?action=certificate&userId=${runnerId}`} 
               className="primary-btn" 
-              style={{textDecoration: 'none', display: 'block', textAlign: 'center', background: '#28a745'}}
+              style={{textDecoration: 'none', display: 'block', textAlign: 'center', background: '#28a745', width: '100%', boxSizing: 'border-box'}}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -95,7 +101,7 @@ export default function Performance() {
 
         <button 
           className="secondary-btn" 
-          style={{marginTop: stats?.status === "YES" ? '15px' : '25px'}}
+          style={{marginTop: stats?.status === "YES" ? '15px' : '25px', width: '100%'}}
           onClick={() => window.location.hash = "#scanner"}
         >
           Back to Scanner
