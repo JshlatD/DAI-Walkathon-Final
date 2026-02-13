@@ -56,7 +56,7 @@ export default function Finish() {
     /* ⭐ One single wrapper with box-sizing to prevent overflow */
     <div className="app-content" style={{ width: '100%', boxSizing: 'border-box' }}>
       <div className="screen-container" style={{ 
-        width: '50vh', 
+        width: '45dvh', 
         boxSizing: 'border-box', 
         display: 'flex', 
         flexDirection: 'column', 
