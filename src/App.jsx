@@ -95,8 +95,20 @@ function App() {
               color: 'white',
               textShadow: '0 2px 10px rgba(0,0,0,0.2)'
             }}>
-              DAI-Walkathon 2026
+              Walkathon 2026
             </h1>
+
+            {/* ⭐ NEW: Organization Credit in a single small line */}
+            <p className="welcome-item delay-3" style={{ 
+              fontSize: '16px', 
+              textTransform: 'uppercase', 
+              letterSpacing: '0.5px', 
+              marginTop: '10px', 
+              color: 'rgba(255,255,255,0.8)',
+              //whiteSpace: 'nowrap' // Forces it into one line
+            }}>
+              Organised by Diabetic Association of India, Poona Brach
+            </p>
             
             {/* 3. Developer Credit */}
             <div className="welcome-item delay-3" style={{ marginTop: '30px' }}>

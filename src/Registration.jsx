@@ -7,55 +7,57 @@ export default function Registration({ onRegistered }) {
   
   const API = "https://script.google.com/macros/s/AKfycbxzpxbYQzVMSgnUheJ0N8y_KFmiMAeTBGxZBs3AFIghCQj82bN2W6E1TlBTEdcYuwE/exec";
 
-  const handleAction = async () => {
-    // Basic Validation
-    if (!form.phone || form.phone.length !== 10) { 
-      alert("Please enter exactly 10 digits for the phone number."); 
-      return; 
-    }
+const handleAction = async () => {
+  if (!form.phone || form.phone.length !== 10) { 
+    alert("Please enter exactly 10 digits for the phone number."); 
+    return; 
+  }
+  
+  if (!loginMode && (!form.name || !form.dob || !form.gender)) {
+    alert("Please fill in all registration fields.");
+    return;
+  }
+
+  setLoading(true);
+
+  try {
+    const res = await fetch(API, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({
+        // ⭐ Use userId as the key for the query during login
+        action: loginMode ? "getUserStats" : "register",
+        userId: form.phone.trim(), 
+        phone: form.phone.trim(),
+        name: form.name,
+        dob: form.dob,
+        gender: form.gender
+      })
+    });
+
+    const data = await res.json();
     
-    if (!loginMode && (!form.name || !form.dob || !form.gender)) {
-      alert("Please fill in all registration fields.");
-      return;
-    }
+    if (data.error) {
+      alert(`❌ ${data.error}`);
+    } else {
+      // ⭐ SUCCESS: Use the actual UserId returned by the server
+      const actualId = data.userId; 
+      const actualName = data.name;
 
-    setLoading(true);
-
-    try {
-      const res = await fetch(API, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify({
-          action: loginMode ? "getUserStats" : "register",
-          phone: form.phone.trim(),
-          name: form.name,
-          dob: form.dob,
-          gender: form.gender
-        })
-      });
-
-      const data = await res.json();
-      
-      if (data.error) {
-        alert(`❌ ${data.error}`);
+      if (!actualId) {
+        alert("User not found. Please register first.");
       } else {
-        // Find the userId: it might be in data.userId (register) or in the stats (login)
-        const id = data.userId || (data.name ? form.phone : null); 
-        
-        if (!id && loginMode) {
-          alert("User not found. Please register first.");
-        } else {
-          localStorage.setItem("userId", data.userId || id);
-          localStorage.setItem("userName", data.name || form.name);
-          alert(`✅ Success! Welcome ${data.name || form.name}`);
-          onRegistered();
-        }
+        localStorage.setItem("userId", actualId);
+        localStorage.setItem("userName", actualName);
+        alert(`✅ Success! Welcome ${actualName}`);
+        onRegistered();
       }
-    } catch (err) { 
-      alert("Network error. Please try again."); 
     }
-    setLoading(false);
-  };
+  } catch (err) { 
+    alert("Network error. Please try again."); 
+  }
+  setLoading(false);
+};
 
   return (
     <div className="form-card">

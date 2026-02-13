@@ -46,49 +46,67 @@ export default function Finish() {
 
   if (loading) return <div className="screen-container"><p>Calculating final results...</p></div>;
 
-  return (
-    /* ⭐ FIXED: Enabled Scrolling for the entire screen */
-    <div className="screen-container" style={{ textAlign: 'center', overflowY: 'auto', height: '100%', paddingBottom: '30px' }}>
-      <div style={{ fontSize: '60px', marginBottom: '10px' }}>🏆</div>
-      <h2 style={{ color: '#28a745' }}>Congratulations!</h2>
-      <p style={{ fontSize: '18px', margin: '10px 0' }}>
-        <strong>{userName}</strong>, you have successfully completed the DAI Walkathon!
-      </p>
+ // ⭐ UPDATED FinishScreen.jsx (Optimized for Mobile Height)
+// ... same imports and fetch logic ...
 
-      <div className="finish-card" style={{ background: '#f8f9fa', padding: '20px', borderRadius: '20px', margin: '20px 0', border: '2px solid #28a745' }}>
-        <p style={{ textTransform: 'uppercase', fontSize: '12px', color: '#666', marginBottom: '5px' }}>Your Official Time</p>
-        <h1 style={{ fontSize: '48px', margin: 0, color: '#333' }}>
-          {stats?.total ? formatTime(stats.total) : "00:00"}
-        </h1>
-      </div>
+return (
+  <div className="screen-container" style={{ 
+    textAlign: 'center', 
+    overflowY: 'auto', 
+    maxHeight: '90vh', // ⭐ Limits height so bottom is reachable
+    padding: '10px 20px 40px', // Added more bottom padding for scrolling room
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
+  }}>
+    <div style={{ fontSize: '50px', marginBottom: '5px' }}>🏆</div>
+    <h2 style={{ color: '#28a745', margin: '0 0 5px' }}>Congratulations!</h2>
+    <p style={{ fontSize: '15px', margin: '0 0 15px', color: '#555' }}>
+      <strong>{userName}</strong>, you finished!
+    </p>
 
-      <p style={{ color: '#666', marginBottom: '25px' }}>
-        Age Group: <strong>{stats?.ageGroup}</strong>
-      </p>
-
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
-        <a 
-          href={`${API}?action=certificate&userId=${runnerId}`} 
-          className="primary-btn" 
-          style={{ textDecoration: 'none', background: '#28a745', display: 'block' }}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          🎓 Download Certificate
-        </a>
-
-        {/* ⭐ View Performance Button is now accessible via scroll */}
-        <button 
-          className="secondary-btn" 
-          onClick={() => window.location.hash = "#performance"}
-        >
-          Detailed Performance
-        </button>
-      </div>
-
-      <p style={{ marginTop: '30px', fontSize: '11px', color: '#999' }}>
-        Thank you for participating! Your results are now live on the leaderboard.
-      </p>
+    {/* ⭐ Reduced padding and margins here to save space */}
+    <div className="finish-card" style={{ 
+      background: '#f8f9fa', 
+      padding: '15px', 
+      borderRadius: '20px', 
+      margin: '0 0 15px', 
+      border: '2px solid #28a745',
+      width: '100%' 
+    }}>
+      <p style={{ textTransform: 'uppercase', fontSize: '10px', color: '#666', marginBottom: '2px' }}>Your Official Time</p>
+      <h1 style={{ fontSize: '40px', margin: 0, color: '#333' }}>
+        {stats?.total ? formatTime(stats.total) : "00:00"}
+      </h1>
     </div>
-  );
+
+    <p style={{ color: '#666', marginBottom: '15px', fontSize: '14px' }}>
+      Age Group: <strong>{stats?.ageGroup}</strong>
+    </p>
+
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%' }}>
+      <a 
+        href={`${API}?action=certificate&userId=${runnerId}`} 
+        className="primary-btn" 
+        style={{ textDecoration: 'none', background: '#28a745', display: 'block', padding: '12px' }}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        🎓 Download Certificate
+      </a>
+
+      <button 
+        className="secondary-btn" 
+        style={{ padding: '12px' }}
+        onClick={() => window.location.hash = "#performance"}
+      >
+        Detailed Performance
+      </button>
+    </div>
+
+    <p style={{ marginTop: '20px', fontSize: '10px', color: '#999' }}>
+      Thank you for participating!
+    </p>
+  </div>
+);
 }
