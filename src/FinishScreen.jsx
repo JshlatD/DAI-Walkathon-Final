@@ -69,15 +69,18 @@ export default function Finish() {
   return (
     <div className="app-content" style={{ width: '100%', boxSizing: 'border-box' }}>
       <div className="screen-container" style={{ 
-        textAlign: 'center', 
-        overflowY: 'auto', 
-        maxHeight: '85vh', 
-        padding: '10px 20px 40px', 
         width: '100%', 
-        boxSizing: 'border-box',
-        display: 'flex',
-        flexDirection: 'column'
-        // ⭐ alignItems: 'center' removed to allow full-width cards
+        boxSizing: 'border-box', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        alignItems: 'stretch' // ⭐ Forces children to fill width
+      }}>
+      <div className="screen-container" style={{ 
+        width: '100%', 
+        boxSizing: 'border-box', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        alignItems: 'stretch' // ⭐ Forces children to fill width
       }}>
         <div style={{ fontSize: '50px', marginBottom: '5px' }}>🏆</div>
         <h2 style={{ color: '#28a745', margin: '0 0 5px' }}>Congratulations!</h2>
