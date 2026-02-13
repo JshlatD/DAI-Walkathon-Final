@@ -75,8 +75,8 @@ export default function Finish() {
         flexDirection: 'column', 
         alignItems: 'stretch', // ⭐ Forces children to fill width
         textAlign: 'center',
-        minHeight: '100vh',
-        overflowY: 'visible',
+        minHeight: '50dvh',
+        overflowY: 'auto',
         //overflowY: 'auto',     // ⭐ Re-enabled scrolling for small screens
         //maxHeight: '85vh',     // ⭐ Prevents content from going off-bottom
         padding: '10px 20px 40px'
