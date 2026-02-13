@@ -8,7 +8,7 @@ export default function Finish() {
   const [runnerId, setRunnerId] = useState(localStorage.getItem("userId"));
   const [userName, setUserName] = useState(localStorage.getItem("userName"));
 
-  const API = "https://script.google.com/macros/s/AKfycbxzpxbYQzVMSgnUheJ0Y8y_KFmiMAeTBGxZBs3AFIghCQj82bN2W6E1TlBTEdcYuwE/exec";
+  const API = "https://script.google.com/macros/s/AKfycbxzpxbYQzVMSgnUheJ0N8y_KFmiMAeTBGxZBs3AFIghCQj82bN2W6E1TlBTEdcYuwE/exec";
 
   const formatTime = (decimalMins) => {
     if (!decimalMins || isNaN(decimalMins)) return "00:00";
