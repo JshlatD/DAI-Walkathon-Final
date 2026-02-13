@@ -73,14 +73,11 @@ export default function Finish() {
         boxSizing: 'border-box', 
         display: 'flex', 
         flexDirection: 'column', 
-        alignItems: 'stretch' // ⭐ Forces children to fill width
-      }}>
-      <div className="screen-container" style={{ 
-        width: '100%', 
-        boxSizing: 'border-box', 
-        display: 'flex', 
-        flexDirection: 'column', 
-        alignItems: 'stretch' // ⭐ Forces children to fill width
+        alignItems: 'stretch', // ⭐ Forces children to fill width
+        textAlign: 'center',
+        overflowY: 'auto',     // ⭐ Re-enabled scrolling for small screens
+        maxHeight: '85vh',     // ⭐ Prevents content from going off-bottom
+        padding: '10px 20px 40px'
       }}>
         <div style={{ fontSize: '50px', marginBottom: '5px' }}>🏆</div>
         <h2 style={{ color: '#28a745', margin: '0 0 5px' }}>Congratulations!</h2>
@@ -88,7 +85,6 @@ export default function Finish() {
           <strong>{userName || localStorage.getItem("userName")}</strong>, you finished!
         </p>
 
-        {/* ⭐ Card now fills width properly */}
         <div className="finish-card" style={{ 
           background: '#f8f9fa', 
           padding: '20px', 
@@ -99,7 +95,7 @@ export default function Finish() {
           boxSizing: 'border-box'
         }}>
           <p style={{ textTransform: 'uppercase', fontSize: '11px', color: '#666', marginBottom: '5px' }}>Your Official Time</p>
-          <h1 style={{ fontSize: '48px', margin: 0, color: '#333' }}>
+          <h1 style={{ fontSize: '48px', margin: 0, color: '#333', fontWeight: 'bold' }}>
             {stats?.total ? formatTime(stats.total) : "00:00"}
           </h1>
         </div>
