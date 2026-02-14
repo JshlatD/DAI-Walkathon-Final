@@ -7,6 +7,7 @@ export default function Performance() {
   const [loading, setLoading] = useState(true);
 
   const API = "https://script.google.com/macros/s/AKfycbxzpxbYQzVMSgnUheJ0N8y_KFmiMAeTBGxZBs3AFIghCQj82bN2W6E1TlBTEdcYuwE/exec";
+
   const formatTime = (decimalMins) => {
     if (!decimalMins || isNaN(decimalMins) || decimalMins === 0) return "00:00";
     const totalSeconds = Math.round(decimalMins * 60);
@@ -42,22 +43,42 @@ export default function Performance() {
     </div>
   );
 
+  // ⭐ Observation 5: Logic to calculate progress safely
+  const completedRounds = stats?.rounds?.length || 0;
+  const totalRounds = stats?.totalRounds || 1; // Fallback to 1 to avoid division by zero
+  const progressPercent = Math.min((completedRounds / totalRounds) * 100, 100);
+
   return (
     <div className="app-content" style={{ width: '100%', boxSizing: 'border-box' }}>
       <div className="screen-container" style={{ 
-        width: '50vh%', 
+        width: '50vh', 
         boxSizing: 'border-box', 
         display: 'flex', 
         flexDirection: 'column', 
-        alignItems: 'stretch' // ⭐ Forces children to fill width
+        alignItems: 'stretch' 
       }}>
         <h2 style={{textAlign: 'center', marginBottom: '10px'}}>My Performance</h2>
-        <div style={{textAlign: 'center', marginBottom: '20px'}}>
+        <div style={{textAlign: 'center', marginBottom: '10px'}}>
           <p><strong>{userName}</strong></p>
           <p style={{fontSize: '12px', color: '#666'}}>Bib Number: {runnerId}</p>
         </div>
+
+        {/* ⭐ Observation 5: Progress Bar */}
+        <div style={{ marginBottom: '25px', padding: '0 5px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '5px', color: '#666' }}>
+            <span>Race Progress</span>
+            <span>{completedRounds} / {totalRounds} Rounds</span>
+          </div>
+          <div style={{ width: '100%', height: '10px', background: '#eee', borderRadius: '10px', overflow: 'hidden' }}>
+            <div style={{ 
+              width: `${progressPercent}%`, 
+              height: '100%', 
+              background: stats?.status === "YES" ? "#28a745" : "#0d6efd", 
+              transition: 'width 0.5s ease' 
+            }}></div>
+          </div>
+        </div>
         
-        {/* ⭐ Standardized grid for mobile widths */}
         <div className="stats-grid" style={{display: 'flex', gap: '10px', marginBottom: '25px', width: '100%', boxSizing: 'border-box'}}>
           <div className="stat-card" style={{flex: 1, background: '#f8f9fa', padding: '15px', borderRadius: '15px', textAlign: 'center', border: '1px solid #dee2e6'}}>
             <small style={{color: '#666', fontSize: '11px', textTransform: 'uppercase'}}>Total Time</small>
@@ -99,12 +120,19 @@ export default function Performance() {
           </div>
         )}
 
+        {/* ⭐ Observation 2: Disabled when finished */}
         <button 
           className="secondary-btn" 
-          style={{marginTop: stats?.status === "YES" ? '15px' : '25px', width: '100%'}}
+          disabled={stats?.status === "YES"}
+          style={{
+            marginTop: stats?.status === "YES" ? '15px' : '25px', 
+            width: '100%',
+            opacity: stats?.status === "YES" ? 0.6 : 1,
+            cursor: stats?.status === "YES" ? 'not-allowed' : 'pointer'
+          }}
           onClick={() => window.location.hash = "#scanner"}
         >
-          Back to Scanner
+          {stats?.status === "YES" ? "Race Completed" : "Back to Scanner"}
         </button>
       </div>
     </div>
